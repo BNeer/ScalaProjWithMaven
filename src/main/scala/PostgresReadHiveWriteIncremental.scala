@@ -3,7 +3,6 @@ import org.apache.spark.sql.SparkSession
 object PostgresReadHiveWriteIncremental {
 
   def main(args: Array[String]): Unit = {
-
     // Initialize a Spark session
     val spark = SparkSession.builder
       .appName("PostgresToHive")
@@ -16,7 +15,7 @@ object PostgresReadHiveWriteIncremental {
     val hiveTableFullName = s"$hiveDatabase.$hiveTableName"
 
     // Find the max(emp_id) in the Hive table
-    val hiveMaxId = spark.sql(s"SELECT MAX(emp_id) as max_id FROM $hiveTableFullName").collect()(0).getAs[Long]("max_id")
+    val hiveMaxId = spark.sql(s"SELECT CAST(MAX(emp_id) AS LONG) as max_id FROM $hiveTableFullName").collect()(0).getAs[Long]("max_id")
 
     // PostgreSQL database URL
     val postgresDbUrl = "jdbc:postgresql://ec2-3-9-191-104.eu-west-2.compute.amazonaws.com:5432/testdb"
